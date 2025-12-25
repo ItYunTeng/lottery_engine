@@ -1,8 +1,9 @@
 from .features import *
+from config.settings import *
 
 
-def invalid_shape(balls, last_balls):
-    if count_repeat(balls, last_balls) >= 3:
+def invalid_shape(balls, last_balls, history_data):
+    if count_repeat(balls, last_balls) > MAX_REPEAT_WITH_LAST:
         return True
 
     s = calc_sum(balls)
@@ -17,6 +18,10 @@ def invalid_shape(balls, last_balls):
         return True
 
     if big_small(balls) in [(5, 1), (1, 5)]:
+        return True
+
+    zm = zero_model(balls)
+    if (zm.count(0), zm.count(1), zm.count(2)) in his_zero_model(history_data):
         return True
 
     return False

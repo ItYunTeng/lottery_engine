@@ -1,4 +1,5 @@
 from .features import *
+from config.settings import *
 
 
 def hit_fail_pattern(balls, last_balls, fail_stats=None):
@@ -7,7 +8,7 @@ def hit_fail_pattern(balls, last_balls, fail_stats=None):
     """
 
     # ① 重号过多
-    if count_repeat(balls, last_balls) >= 3:
+    if count_repeat(balls, last_balls) > MAX_REPEAT_WITH_LAST:
         return True
 
     # ② 极端和值

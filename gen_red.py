@@ -76,15 +76,6 @@ avg_sum = sum(sums) / len(sums)
 acs = [calc_ac_value(row) for row in history_data]
 avg_ac = sum(acs) / len(acs)
 
-# 012路统计：每期0,1,2的数量
-model_counts = []
-for row in history_data:
-    model = zero_model(row)
-    c0 = model.count(0)
-    c1 = model.count(1)
-    c2 = model.count(2)
-    model_counts.append((c0, c1, c2))
-
 
 # ========== 步骤3：生成候选组合 ==========
 def generate_candidate():
@@ -142,12 +133,12 @@ filtered_numbers = filter_numbers_by_suffix(suffixes, total_range=33)
 candidates_with_scores = []
 last_balls = history_data[-1]
 fail_stats = {"hot": hot_bolls(), "cold": very_cold_numbers}
-for _ in range(1000):  # 生成10000个候选
+for _ in range(20000):  # 生成10000个候选
     balls = generate_candidate()
     if count_repeat(balls, last_balls) > MAX_REPEAT_WITH_LAST:
         continue
 
-    if invalid_shape(balls, last_balls):
+    if invalid_shape(balls, last_balls, history_data):
         continue
 
     if hit_fail_pattern(balls, last_balls, fail_stats):

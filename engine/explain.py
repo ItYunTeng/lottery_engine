@@ -22,4 +22,7 @@ def explain(balls, last_balls, hot_set):
     bs = big_small(balls)
     explanation.append(f"大小比: {bs[0]}:{bs[1]}")
 
+    zm = zero_model(balls)
+    explanation.append(f"012分布: {zm.count(0), zm.count(1), zm.count(2)}")
+
     return explanation
