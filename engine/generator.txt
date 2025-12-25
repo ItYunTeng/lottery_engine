@@ -1,0 +1,16 @@
+from itertools import combinations
+from .rules import invalid_shape
+from .features import count_repeat
+
+
+def generate_candidates(all_nums, last_balls, max_repeat):
+    for balls in combinations(all_nums, 6):
+        balls = list(balls)
+
+        if count_repeat(balls, last_balls) > max_repeat:
+            continue
+
+        if invalid_shape(balls, last_balls):
+            continue
+
+        yield balls
