@@ -1,4 +1,6 @@
 import random
+from itertools import combinations
+
 from ss_ball_count import *
 from engine.hoistorySuffixReds import *
 from engine.rules import invalid_shape
@@ -69,6 +71,8 @@ hot_numbers = hot_bolls()
 cold_numbers = {num for num in range(1, 34) if num not in all_numbers}  # 完全没出过
 rare_numbers = {num for num, count in counter.items() if count == 1}  # 出过1次
 very_cold_numbers = cold_numbers | rare_numbers
+suffixes = read_last_row_11th_column(HIS_CSV_PATH)
+filtered_numbers = filter_numbers_by_suffix(suffixes, total_range=33)
 
 # 统计历史特征
 sums = [sum(row) for row in history_data]
@@ -127,13 +131,33 @@ def score_combination(reds):
     return total_score
 
 
-suffixes = read_last_row_11th_column(HIS_CSV_PATH)
-filtered_numbers = filter_numbers_by_suffix(suffixes, total_range=33)
+def is_valid_combo(combo):
+    combo_set = set(combo)
+    hot_count = len(combo_set & hot_numbers)
+    cold_count = len(combo_set & very_cold_numbers)
+    return (1 <= hot_count <= 2) and (cold_count <= 1)
+
+
+all_red_bolls = set(hot_numbers) | set(cold_numbers) | set(filtered_numbers)
+
+
+def valid_generator():
+    for combo in combinations(all_red_bolls, 6):
+        if is_valid_combo(combo):
+            yield combo
+
+
+valid_combos = [
+    balls for balls in valid_generator()
+]
+total_valid = len(valid_combos)
+print(f"有效组合数：{total_valid}")
+
 # 生成大量候选并评分
 candidates_with_scores = []
 last_balls = history_data[-1]
 fail_stats = {"hot": hot_bolls(), "cold": very_cold_numbers}
-for _ in range(20000):  # 生成10000个候选
+for _ in range(total_valid):
     balls = generate_candidate()
     if count_repeat(balls, last_balls) > MAX_REPEAT_WITH_LAST:
         continue

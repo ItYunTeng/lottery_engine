@@ -21,7 +21,7 @@ def invalid_shape(balls, last_balls, history_data):
         return True
 
     zm = zero_model(balls)
-    if (zm.count(0), zm.count(1), zm.count(2)) in his_zero_model(history_data):
+    if (zm.count(0), zm.count(1), zm.count(2)) not in his_zero_model(history_data):
         return True
 
     return False
