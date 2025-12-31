@@ -1,3 +1,8 @@
+import math
+from collections import Counter
+import numpy as np
+
+
 def calc_sum(balls):
     return sum(balls)
 
@@ -44,3 +49,20 @@ def his_zero_model(history_data):
         c2 = model.count(2)
         model_counts.append((c0, c1, c2))
     return model_counts
+
+
+def statistics(red_balls):
+    mean = np.mean(red_balls)
+    # ddof=1 表示样本方差（除以 n-1）
+    variance = np.var(red_balls, ddof=1)
+    std_dev = np.std(red_balls, ddof=1)
+    return round(mean), round(variance), round(std_dev)
+
+
+def find_most_common(lst):
+    # 使用Counter来统计每个元素的出现次数
+    counts = Counter(lst)
+    # 找到出现次数最多的元素
+    most_common = counts.most_common(1)
+    # 如果列表为空，返回空元组
+    return most_common[0] if most_common else ()

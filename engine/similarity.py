@@ -2,7 +2,7 @@ def jac_card(a, b):
     return len(set(a) & set(b)) / len(set(a) | set(b))
 
 
-def historical_similarity(balls, history, window=30):
+def historical_similarity(balls, history, window=15):
     """
     计算与最近 window 期的最大相似度
     """

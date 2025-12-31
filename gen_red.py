@@ -1,4 +1,6 @@
 import random
+import ast
+import pandas as pd
 from itertools import combinations
 
 from ss_ball_count import *
@@ -153,19 +155,27 @@ valid_combos = [
 total_valid = len(valid_combos)
 print(f"有效组合数：{total_valid}")
 
+df_full = pd.read_csv('data/full_history.csv', parse_dates=['日期'])
+print(f"共加载 {len(df_full)} 期数据，时间跨度：{df_full['日期'].min()} 至 {df_full['日期'].max()}")
+df_full["红球_list"] = df_full["红球"].apply(ast.literal_eval)
+df_full["红球_sorted_tuple"] = df_full["红球_list"].apply(lambda x: tuple(sorted(x)))
+
+# 构建历史集合（用于快速查询）
+history_combinations = set(df_full["红球_sorted_tuple"])
+
 # 生成大量候选并评分
 candidates_with_scores = []
 last_balls = history_data[-1]
 fail_stats = {"hot": hot_bolls(), "cold": very_cold_numbers}
 for _ in range(total_valid):
     balls = generate_candidate()
-    if count_repeat(balls, last_balls) > MAX_REPEAT_WITH_LAST:
-        continue
-
     if invalid_shape(balls, last_balls, history_data):
         continue
 
     if hit_fail_pattern(balls, last_balls, fail_stats):
+        continue
+
+    if tuple(balls) in history_combinations:
         continue
 
     score = score_combination(balls)

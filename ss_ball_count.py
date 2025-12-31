@@ -2,7 +2,7 @@ import urllib.request as ur
 from bs4 import BeautifulSoup
 import math
 import csv
-from collections import Counter
+from engine.features import statistics
 
 url = 'https://view.lottery.sina.com.cn/lotto/pc_zst/index?lottoType=ssq&actionType=chzs&type=120&dpc=1'
 
@@ -85,15 +85,6 @@ def save_data(rows):
         writer.writerows(rows)
 
 
-def find_most_common(lst):
-    # 使用Counter来统计每个元素的出现次数
-    counts = Counter(lst)
-    # 找到出现次数最多的元素
-    most_common = counts.most_common(1)
-    # 如果列表为空，返回空元组
-    return most_common[0] if most_common else ()
-
-
 def get_datas():
     req = ur.Request(url=url)
     page = ur.urlopen(req)
@@ -104,7 +95,7 @@ def get_datas():
 
     rows = [[
         '期数', '星期', '红球', '篮球', '和值', 'AC', '分列差', '并列差', '公式差', '取模直', '非AC尾',
-        '012路'
+        '012路','样本分析-均值-方差-标准差'
     ]]
     tbody = table.find_all('tbody')
     trs = tbody[0].find_all('tr')
@@ -127,21 +118,18 @@ def get_datas():
             reds.append(int(data))
 
         ac = calc_ac_value(reds)
-        # ac_diffs = ac_diff(reds)
-        # 找到出现次数最多的元素
-        # most_element, count = find_most_common(ac_diffs)
         and_diffs = and_diff(reds)
         split_diffs = split_diff(reds)
         formula_diffs = formula_diff(reds, int(add))
         zero_models = zero_model(reds)
-        # add_ac_ends = list(set(ac_diffs + and_diffs + split_diffs + formula_diffs + model_vals))
+        stat = list(statistics(reds))
         add_ends = list(
             set(and_diffs + split_diffs + formula_diffs + model_vals))
         rows.append([
             cic, week, reds, blue, add, ac, split_diffs, and_diffs,
-            formula_diffs, model_vals, add_ends, zero_models
+            formula_diffs, model_vals, add_ends, zero_models, stat
         ])
-    print(rows)
+    print('拉取数据计算完成。。。。。。')
     save_data(rows)
 
 
