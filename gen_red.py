@@ -6,9 +6,9 @@ from itertools import combinations
 from ss_ball_count import *
 from engine.hoistorySuffixReds import *
 from engine.rules import invalid_shape
-from engine.features import count_repeat
 from config.settings import *
 from engine.fail_patterns import hit_fail_pattern
+from collections import Counter
 
 
 # ========== 你的原始函数 ==========
