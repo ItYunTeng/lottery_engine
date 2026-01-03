@@ -57,7 +57,8 @@ def main():
                     "日期": date_str,
                     "期号": issue,
                     "红球": reds,
-                    "篮球": blue
+                    "篮球": blue,
+                    "杀号(红-蓝)": [abs(item - blue) for item in reds]
                 }
                 records.append(record)
 
@@ -77,7 +78,7 @@ def main():
         df = df.drop_duplicates(subset=['期号']).sort_values('日期').reset_index(drop=True)
 
         # 保存
-        output_file = "ssq_full_history.csv"
+        output_file = "data/full_history.csv"
         df.to_csv(output_file, index=False, encoding='utf-8-sig')
         print(f"\n✅ 成功获取 {len(df)} 期完整历史数据！已保存至 {output_file}")
         print("\n最早3期：")

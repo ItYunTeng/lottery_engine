@@ -2,7 +2,7 @@ import urllib.request as ur
 from bs4 import BeautifulSoup
 import math
 import csv
-from engine.features import statistics
+from engine.features import statistics, zero_model
 
 url = 'https://view.lottery.sina.com.cn/lotto/pc_zst/index?lottoType=ssq&actionType=chzs&type=120&dpc=1'
 
@@ -60,16 +60,6 @@ def formula_diff(numbers, add):
     return diff
 
 
-def zero_model(numbers):
-    if len(numbers) != 6:
-        raise ValueError("need input six red bool")
-    numbers = sorted(numbers)
-    model = []
-    for v in numbers:
-        model.append(v % 3)
-    return model
-
-
 def model_val(add):
     diff = []
     s = [6, 5, 4]
@@ -121,13 +111,13 @@ def get_datas():
         and_diffs = and_diff(reds)
         split_diffs = split_diff(reds)
         formula_diffs = formula_diff(reds, int(add))
-        zero_models = zero_model(reds)
+        zm = zero_model(reds)
         stat = list(statistics(reds))
         add_ends = list(
             set(and_diffs + split_diffs + formula_diffs + model_vals))
         rows.append([
             cic, week, reds, blue, add, ac, split_diffs, and_diffs,
-            formula_diffs, model_vals, add_ends, zero_models, stat
+            formula_diffs, model_vals, add_ends, [zm.count(0), zm.count(1), zm.count(2)], stat
         ])
     print('拉取数据计算完成。。。。。。')
     save_data(rows)

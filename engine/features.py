@@ -32,9 +32,9 @@ def calc_ac(balls):
 def zero_model(balls):
     if len(balls) != 6:
         raise ValueError("need input six red bool")
-    numbers = sorted(balls)
+    balls = sorted(balls)
     model = []
-    for v in numbers:
+    for v in balls:
         model.append(v % 3)
     return model
 

@@ -39,7 +39,7 @@ def predict(top_n: int = 10):
                 "explain": explain(c[0], last_balls, hot_numbers)
             })
 
-    results = select_top(results, top_n)
+    # results = select_top(results, top_n)
 
     return {
         "last": last_balls,
