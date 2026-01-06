@@ -1,11 +1,11 @@
+import csv
+
+from engine.explain import explain
 from engine.loader import load_history
-from engine.selector import select_top
 from engine.strategies.strategy_v1 import StrategyV1
 from engine.strategies.strategy_v2 import StrategyV2
 from engine.strategies.voter import StrategyVoter
-from engine.explain import explain
 from gen_red import *
-import csv
 
 
 def predict(top_n: int = 10):
